@@ -1,0 +1,175 @@
+{
+  "updateTime": "2026-07-23T09:10:39.960599",
+  "futures": [
+    {
+      "code": "JM0",
+      "name": "焦煤主力",
+      "exchange": "大商所",
+      "price": 1276.5,
+      "prev_close": 1272.0,
+      "change": 4.5,
+      "changePct": 0.35,
+      "high": 1280.0,
+      "low": 1267.5,
+      "open": 1270.0
+    },
+    {
+      "code": "J0",
+      "name": "焦炭主力",
+      "exchange": "大商所",
+      "price": 1827.5,
+      "prev_close": 1827.5,
+      "change": 0.0,
+      "changePct": 0.0,
+      "high": 1836.5,
+      "low": 1820.5,
+      "open": 1833.5
+    },
+    {
+      "code": "MA0",
+      "name": "甲醇主力",
+      "exchange": "郑商所",
+      "price": 2718.0,
+      "prev_close": 2714.0,
+      "change": 4.0,
+      "changePct": 0.15,
+      "high": 2738.0,
+      "low": 2709.0,
+      "open": 2728.0
+    },
+    {
+      "code": "SA0",
+      "name": "纯碱主力",
+      "exchange": "郑商所",
+      "price": 1010.0,
+      "prev_close": 1004.0,
+      "change": 6.0,
+      "changePct": 0.6,
+      "high": 1017.0,
+      "low": 1007.0,
+      "open": 1014.0
+    },
+    {
+      "code": "UR0",
+      "name": "尿素主力",
+      "exchange": "郑商所",
+      "price": 1743.0,
+      "prev_close": 1737.0,
+      "change": 6.0,
+      "changePct": 0.35,
+      "high": 1746.0,
+      "low": 1739.0,
+      "open": 1741.0
+    },
+    {
+      "code": "EG0",
+      "name": "乙二醇主力",
+      "exchange": "大商所",
+      "price": 4731.0,
+      "prev_close": 4776.0,
+      "change": -45.0,
+      "changePct": -0.94,
+      "high": 4796.0,
+      "low": 4720.0,
+      "open": 4792.0
+    },
+    {
+      "code": "PP0",
+      "name": "聚丙烯主力",
+      "exchange": "大商所",
+      "price": 8337.0,
+      "prev_close": 8315.0,
+      "change": 22.0,
+      "changePct": 0.26,
+      "high": 8400.0,
+      "low": 8321.0,
+      "open": 8400.0
+    },
+    {
+      "code": "L0",
+      "name": "聚乙烯主力",
+      "exchange": "大商所",
+      "price": 7822.0,
+      "prev_close": 7829.0,
+      "change": -7.0,
+      "changePct": -0.09,
+      "high": 7861.0,
+      "low": 7791.0,
+      "open": 7860.0
+    }
+  ],
+  "spots": [
+    {
+      "code": "JM",
+      "name": "焦煤现货",
+      "unit": "元/吨",
+      "price": 1276.5,
+      "change": 4.5,
+      "changePct": 0.35,
+      "note": "参考期货主力合约价格"
+    },
+    {
+      "code": "J",
+      "name": "焦炭现货",
+      "unit": "元/吨",
+      "price": 1827.5,
+      "change": 0.0,
+      "changePct": 0.0,
+      "note": "参考期货主力合约价格"
+    },
+    {
+      "code": "MA",
+      "name": "甲醇现货",
+      "unit": "元/吨",
+      "price": 2718.0,
+      "change": 4.0,
+      "changePct": 0.15,
+      "note": "参考期货主力合约价格"
+    },
+    {
+      "code": "SA",
+      "name": "纯碱现货",
+      "unit": "元/吨",
+      "price": 1010.0,
+      "change": 6.0,
+      "changePct": 0.6,
+      "note": "参考期货主力合约价格"
+    },
+    {
+      "code": "UR",
+      "name": "尿素现货",
+      "unit": "元/吨",
+      "price": 1743.0,
+      "change": 6.0,
+      "changePct": 0.35,
+      "note": "参考期货主力合约价格"
+    },
+    {
+      "code": "EG",
+      "name": "乙二醇现货",
+      "unit": "元/吨",
+      "price": 4731.0,
+      "change": -45.0,
+      "changePct": -0.94,
+      "note": "参考期货主力合约价格"
+    },
+    {
+      "code": "PP",
+      "name": "聚丙烯现货",
+      "unit": "元/吨",
+      "price": 8337.0,
+      "change": 22.0,
+      "changePct": 0.26,
+      "note": "参考期货主力合约价格"
+    },
+    {
+      "code": "L",
+      "name": "聚乙烯现货",
+      "unit": "元/吨",
+      "price": 7822.0,
+      "change": -7.0,
+      "changePct": -0.09,
+      "note": "参考期货主力合约价格"
+    }
+  ]
+}
