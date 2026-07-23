@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>煤化工产业链</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏭</text></svg>">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      max-width: 500px;
+      margin: 0 auto;
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    /* 登录页 */
+    .login-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+    .login-logo { font-size: 60px; margin-bottom: 20px; }
+    .login-title { color: #fff; font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+    .login-subtitle { color: #aaa; font-size: 14px; margin-bottom: 40px; }
+    .login-input {
+      width: 100%;
+      max-width: 300px;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 25px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .login-input::placeholder { color: #888; }
+    .login-btn {
+      width: 100%;
+      max-width: 300px;
+      padding: 15px;
+      border: none;
+      border-radius: 25px;
+      background: #e94560;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .login-error { color: #e94560; font-size: 14px; margin-top: 10px; }
+    
+    /* 主应用 */
+    .app { display: none; padding-bottom: 70px; }
+    .app.active { display: block; }
+    .page { display: none; }
+    .page.active { display: block; }
+    
+    /* 底部导航 */
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 500px;
+      background: #fff;
+      display: flex;
+      border-top: 1px solid #eee;
+      z-index: 100;
+    }
+    .tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      cursor: pointer;
+      color: #999;
+    }
+    .tab-item.active { color: #1a1a2e; }
+    .tab-icon { font-size: 24px; margin-bottom: 4px; }
+    .tab-text { font-size: 12px; }
+    
+    /* 首页 */
+    .banner {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      padding: 30px 20px;
+      color: #fff;
+    }
+    .banner-title { font-size: 24px; font-weight: bold; display: block; }
+    .banner-subtitle { font-size: 14px; color: #aaa; margin-top: 8px; display: block; }
+    
+    .quick-entry {
+      display: flex;
+      background: #fff;
+      padding: 20px;
+      margin: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .entry-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+    .entry-icon { font-size: 32px; margin-bottom: 8px; }
+    .entry-text { font-size: 14px; color: #333; }
+    
+    .section { margin: 15px; }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .section-title { font-size: 16px; font-weight: bold; color: #333; }
+    .section-more { font-size: 12px; color: #999; cursor: pointer; }
+    
+    .futures-list {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .futures-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .futures-item:last-child { border-bottom: none; }
+    .futures-name { font-size: 14px; color: #333; font-weight: 500; }
+    .futures-exchange { font-size: 12px; color: #999; margin-top: 4px; }
+    .futures-price { font-size: 18px; font-weight: bold; }
+    .futures-change { font-size: 12px; margin-top: 4px; text-align: right; }
+    .up { color: #e74c3c; }
+    .down { color: #27ae60; }
+    .flat { color: #999; }
+    
+    .hot-companies {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .company-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+    }
+    .company-item:last-child { border-bottom: none; }
+    .company-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: #1a1a2e;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-right: 12px;
+    }
+    .company-info { flex: 1; }
+    .company-name { font-size: 14px; color: #333; font-weight: 500; }
+    .company-products { font-size: 12px; color: #999; margin-top: 4px; }
+    .company-arrow { color: #ccc; }
+    
+    /* 企业库 */
+    .filter-tabs {
+      display: flex;
+      background: #fff;
+      padding: 10px;
+      margin: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .filter-tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      color: #666;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .filter-tab.active { background: #1a1a2e; color: #fff; }
+    
+    .subcategory-tabs {
+      display: flex;
+      background: #fff;
+      padding: 10px;
+      margin: 0 15px 15px;
+      border-radius: 12px;
+      overflow-x: auto;
+      white-space: nowrap;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .subcategory-tab {
+      padding: 8px 16px;
+      font-size: 12px;
+      color: #666;
+      background: #f5f5f5;
+      border-radius: 16px;
+      cursor: pointer;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    .subcategory-tab.active { background: #1a1a2e; color: #fff; }
+    
+    .company-list {
+      background: #fff;
+      margin: 0 15px 15px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    /* 行情页 */
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 15px;
+      margin: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .header-title { font-size: 18px; font-weight: bold; color: #333; }
+    .update-info { display: flex; align-items: center; gap: 10px; }
+    .update-time { font-size: 12px; color: #999; }
+    .refresh-btn {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      border: none;
+    }
+    
+    .tab-bar-inner {
+      display: flex;
+      background: #fff;
+      padding: 10px;
+      margin: 0 15px 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .tab-inner-item {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      color: #666;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .tab-inner-item.active { background: #1a1a2e; color: #fff; }
+    
+    .data-list {
+      background: #fff;
+      margin: 0 15px 15px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .data-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+    }
+    .data-item:last-child { border-bottom: none; }
+    .data-name { font-size: 14px; color: #333; font-weight: 500; }
+    .data-unit { font-size: 12px; color: #999; margin-top: 4px; }
+    .data-price { font-size: 18px; font-weight: bold; }
+    .data-change { font-size: 12px; margin-top: 4px; text-align: right; }
+    
+    .disclaimer {
+      margin: 0 15px 15px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .disclaimer-title { font-size: 14px; font-weight: bold; color: #666; margin-bottom: 10px; }
+    .disclaimer-text { display: block; font-size: 12px; color: #999; line-height: 1.8; }
+    
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+    }
+    .empty-btn {
+      margin-top: 15px;
+      background: #1a1a2e;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: inline-block;
+      cursor: pointer;
+      border: none;
+    }
+    
+    /* 企业详情 */
+    .detail-page {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 500px;
+      height: 100vh;
+      background: #f5f5f5;
+      z-index: 200;
+      overflow-y: auto;
+    }
+    .detail-page.active { display: block; }
+    .detail-header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      padding: 20px;
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .detail-back {
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .detail-name { font-size: 20px; font-weight: bold; }
+    .detail-content { padding: 15px; }
+    .detail-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .detail-section-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #666;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .detail-row {
+      display: flex;
+      margin-bottom: 10px;
+    }
+    .detail-label {
+      width: 80px;
+      font-size: 13px;
+      color: #999;
+    }
+    .detail-value {
+      flex: 1;
+      font-size: 13px;
+      color: #333;
+    }
+    .detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .detail-tag {
+      background: #f0f0f0;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      color: #666;
+    }
+    .detail-desc {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.8;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <!-- 登录页 -->
+  <div class="login-page" id="loginPage">
+    <div class="login-logo">🏭</div>
+    <div class="login-title">煤化工产业链</div>
+    <div class="login-subtitle">内部使用，请输入密码</div>
+    <input type="password" class="login-input" id="passwordInput" placeholder="请输入密码" autocomplete="off">
+    <button class="login-btn" onclick="doLogin()">登录</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+  
+  <!-- 主应用 -->
+  <div class="app" id="mainApp">
+    <!-- 首页 -->
+    <div class="page active" id="page-index">
+      <div class="banner">
+        <span class="banner-title">煤化工产业链</span>
+        <span class="banner-subtitle">上下游企业 · 实时行情</span>
+      </div>
+      
+      <div class="quick-entry">
+        <div class="entry-item" onclick="switchTab(1)">
+          <div class="entry-icon">🏭</div>
+          <div class="entry-text">企业库</div>
+        </div>
+        <div class="entry-item" onclick="switchTab(2)">
+          <div class="entry-icon">📈</div>
+          <div class="entry-text">行业数据</div>
+        </div>
+        <div class="entry-item" onclick="showAbout()">
+          <div class="entry-icon">ℹ️</div>
+          <div class="entry-text">关于我们</div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-header">
+          <span class="section-title">最新行情</span>
+          <span class="section-more" onclick="switchTab(2)">查看更多 ›</span>
+        </div>
+        <div class="futures-list" id="homeFuturesList">
+          <div class="loading">加载中...</div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-header">
+          <span class="section-title">热门企业</span>
+          <span class="section-more" onclick="switchTab(1)">查看更多 ›</span>
+        </div>
+        <div class="hot-companies" id="homeCompaniesList"></div>
+      </div>
+    </div>
+    
+    <!-- 企业库 -->
+    <div class="page" id="page-companies">
+      <div class="filter-tabs">
+        <div class="filter-tab active" data-filter="all" onclick="filterCompanies('all')">全部</div>
+        <div class="filter-tab" data-filter="upstream" onclick="filterCompanies('upstream')">上游</div>
+        <div class="filter-tab" data-filter="midstream" onclick="filterCompanies('midstream')">中游</div>
+        <div class="filter-tab" data-filter="downstream" onclick="filterCompanies('downstream')">下游</div>
+      </div>
+      <div class="subcategory-tabs" id="subcategoryTabs" style="display:none;"></div>
+      <div class="company-list" id="companyList"></div>
+    </div>
+    
+    <!-- 行情 -->
+    <div class="page" id="page-futures">
+      <div class="header-bar">
+        <div class="header-title">行业数据</div>
+        <div class="update-info">
+          <span class="update-time" id="updateTime"></span>
+          <button class="refresh-btn" onclick="loadData()">🔄 更新</button>
+        </div>
+      </div>
+      
+      <div class="tab-bar-inner">
+        <div class="tab-inner-item active" data-tab="futures" onclick="switchDataTab('futures')">产品价格</div>
+        <div class="tab-inner-item" data-tab="spot" onclick="switchDataTab('spot')">现货参考价</div>
+      </div>
+      
+      <div class="data-list" id="futuresList">
+        <div class="loading">加载中...</div>
+      </div>
+      
+      <div class="data-list" id="spotList" style="display:none;">
+        <div class="loading">加载中...</div>
+      </div>
+      
+      <div class="disclaimer">
+        <div class="disclaimer-title">数据说明</div>
+        <span class="disclaimer-text">• 数据来源：公开市场信息整理</span>
+        <span class="disclaimer-text">• 仅供参考，不构成投资建议</span>
+        <span class="disclaimer-text">• 点击"更新"按钮获取最新数据</span>
+        <span class="disclaimer-text">• 实际交易请以官方数据为准</span>
+      </div>
+    </div>
+    
+    <!-- 底部导航 -->
+    <div class="tab-bar">
+      <div class="tab-item active" onclick="switchTab(0)">
+        <div class="tab-icon">🏠</div>
+        <div class="tab-text">首页</div>
+      </div>
+      <div class="tab-item" onclick="switchTab(1)">
+        <div class="tab-icon">🏭</div>
+        <div class="tab-text">企业库</div>
+      </div>
+      <div class="tab-item" onclick="switchTab(2)">
+        <div class="tab-icon">📈</div>
+        <div class="tab-text">行情</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 企业详情 -->
+  <div class="detail-page" id="detailPage">
+    <div class="detail-header">
+      <div class="detail-back" onclick="closeDetail()">‹ 返回</div>
+      <div class="detail-name" id="detailName"></div>
+    </div>
+    <div class="detail-content" id="detailContent"></div>
+  </div>
+
+  <script>
+    // 密码验证
+    const PASSWORD = 'coal2024';
+    
+    function doLogin() {
+      const pwd = document.getElementById('passwordInput').value;
+      if (pwd === PASSWORD) {
+        localStorage.setItem('isLoggedIn', 'true');
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('mainApp').classList.add('active');
+        initApp();
+      } else {
+        document.getElementById('loginError').textContent = '密码错误';
+      }
+    }
+    
+    // 检查登录状态
+    function checkLogin() {
+      if (localStorage.getItem('isLoggedIn') === 'true') {
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('mainApp').classList.add('active');
+        initApp();
+      }
+    }
+    
+    // 企业数据
+    const companies = [
+      { id: 1, name: '宝丰能源', category: 'midstream', products: ['煤制烯烃', '聚乙烯', '聚丙烯'], region: '宁夏', desc: '煤制烯烃龙头企业' },
+      { id: 2, name: '中煤能源', category: 'upstream', products: ['煤炭', '焦炭', '甲醇'], region: '北京', desc: '大型煤炭企业' },
+      { id: 3, name: '神华集团', category: 'upstream', products: ['煤炭', '煤制油', '甲醇'], region: '北京', desc: '国家能源集团核心企业' },
+      { id: 4, name: '兖矿能源', category: 'upstream', products: ['煤炭', '甲醇', '醋酸'], region: '山东', desc: '煤化工全产业链' },
+      { id: 5, name: '华鲁恒升', category: 'midstream', products: ['甲醇', '醋酸', 'DMF'], region: '山东', desc: '煤化工龙头企业' },
+      { id: 6, name: '鲁西化工', category: 'midstream', products: ['甲醇', '醋酸', '烧碱'], region: '山东', desc: '综合化工企业' },
+      { id: 7, name: '山西焦化', category: 'midstream', products: ['焦炭', '煤焦油', '粗苯'], region: '山西', desc: '焦化行业龙头' },
+      { id: 8, name: '美锦能源', category: 'midstream', products: ['焦炭', '氢能'], region: '山西', desc: '焦化+氢能' },
+      { id: 9, name: '中国宝武', category: 'downstream', products: ['钢铁', '焦炭'], region: '上海', desc: '钢铁龙头' },
+      { id: 10, name: '河钢股份', category: 'downstream', products: ['钢铁'], region: '河北', desc: '大型钢企' }
+    ];
+    
+    // 子分类
+    const subcategories = {
+      upstream: { coal_mining: '煤炭开采', coking: '焦化' },
+      midstream: { cto: '煤制烯烃', ctl: '煤制油', methanol: '煤制甲醇', ammonia: '合成氨/尿素' },
+      downstream: { steel: '钢铁', power: '电力', chemical: '化工' }
+    };
+    
+    let currentFilter = 'all';
+    let currentSubFilter = 'all';
+    let currentDataTab = 'futures';
+    let futuresData = [];
+    let spotData = [];
+    
+    function initApp() {
+      renderHomeCompanies();
+      renderCompanies();
+      loadData();
+    }
+    
+    // 切换Tab
+    function switchTab(index) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      document.getElementById(['page-index', 'page-companies', 'page-futures'][index]).classList.add('active');
+      document.querySelectorAll('.tab-item')[index].classList.add('active');
+    }
+    
+    // 首页企业
+    function renderHomeCompanies() {
+      const hot = companies.slice(0, 5);
+      const html = hot.map(c => `
+        <div class="company-item" onclick="showDetail(${c.id})">
+          <div class="company-logo">${c.name[0]}</div>
+          <div class="company-info">
+            <div class="company-name">${c.name}</div>
+            <div class="company-products">${c.products.join('、')}</div>
+          </div>
+          <div class="company-arrow">›</div>
+        </div>
+      `).join('');
+      document.getElementById('homeCompaniesList').innerHTML = html;
+    }
+    
+    // 筛选企业
+    function filterCompanies(filter) {
+      currentFilter = filter;
+      currentSubFilter = 'all';
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`[data-filter="${filter}"]`).classList.add('active');
+      updateSubcategoryTabs();
+      renderCompanies();
+    }
+    
+    function updateSubcategoryTabs() {
+      const container = document.getElementById('subcategoryTabs');
+      if (currentFilter === 'all') {
+        container.style.display = 'none';
+        return;
+      }
+      const subs = subcategories[currentFilter];
+      if (!subs) { container.style.display = 'none'; return; }
+      let html = '<div class="subcategory-tab active" onclick="filterSubCompanies(\'all\')">全部</div>';
+      for (const [key, name] of Object.entries(subs)) {
+        html += `<div class="subcategory-tab" onclick="filterSubCompanies('${key}')">${name}</div>`;
+      }
+      container.innerHTML = html;
+      container.style.display = 'flex';
+    }
+    
+    function filterSubCompanies(sub) {
+      currentSubFilter = sub;
+      document.querySelectorAll('.subcategory-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      renderCompanies();
+    }
+    
+    function renderCompanies() {
+      let filtered = companies;
+      if (currentFilter !== 'all') filtered = filtered.filter(c => c.category === currentFilter);
+      const html = filtered.map(c => `
+        <div class="company-item" onclick="showDetail(${c.id})">
+          <div class="company-logo">${c.name[0]}</div>
+          <div class="company-info">
+            <div class="company-name">${c.name}</div>
+            <div class="company-products">${c.products.join('、')}</div>
+          </div>
+          <div class="company-arrow">›</div>
+        </div>
+      `).join('');
+      document.getElementById('companyList').innerHTML = html || '<div class="empty">暂无数据</div>';
+    }
+    
+    // 企业详情
+    function showDetail(id) {
+      const c = companies.find(x => x.id === id);
+      if (!c) return;
+      document.getElementById('detailName').textContent = c.name;
+      document.getElementById('detailContent').innerHTML = `
+        <div class="detail-section">
+          <div class="detail-section-title">基本信息</div>
+          <div class="detail-row"><div class="detail-label">地区</div><div class="detail-value">${c.region}</div></div>
+          <div class="detail-row"><div class="detail-label">分类</div><div class="detail-value">${{upstream:'上游',midstream:'中游',downstream:'下游'}[c.category]}</div></div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">核心产品</div>
+          <div class="detail-tags">${c.products.map(p => `<span class="detail-tag">${p}</span>`).join('')}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">企业简介</div>
+          <div class="detail-desc">${c.desc}</div>
+        </div>
+      `;
+      document.getElementById('detailPage').classList.add('active');
+    }
+    
+    function closeDetail() {
+      document.getElementById('detailPage').classList.remove('active');
+    }
+    
+    // 行情数据
+    function switchDataTab(tab) {
+      currentDataTab = tab;
+      document.querySelectorAll('.tab-inner-item').forEach(t => t.classList.remove('active'));
+      document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+      document.getElementById('futuresList').style.display = tab === 'futures' ? 'block' : 'none';
+      document.getElementById('spotList').style.display = tab === 'spot' ? 'block' : 'none';
+    }
+    
+    async function loadData() {
+      try {
+        // 从JSON文件读取实时数据
+        const response = await fetch('data/futures.json?t=' + Date.now());
+        const data = await response.json();
+        
+        futuresData = data.futures || [];
+        spotData = data.spots || [];
+        
+        // 渲染期货
+        const futuresHtml = futuresData.map(f => {
+          const colorClass = f.change > 0 ? 'up' : f.change < 0 ? 'down' : 'flat';
+          const changeStr = (f.change >= 0 ? '+' : '') + f.change.toFixed(1);
+          const pctStr = (f.changePct >= 0 ? '+' : '') + f.changePct.toFixed(2) + '%';
+          return `
+            <div class="data-item">
+              <div>
+                <div class="data-name">${f.name}</div>
+                <div class="data-unit">${f.exchange}</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="data-price ${colorClass}">${f.price.toFixed(1)}</div>
+                <div class="data-change ${colorClass}">${changeStr} ${pctStr}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        document.getElementById('futuresList').innerHTML = futuresHtml;
+        document.getElementById('homeFuturesList').innerHTML = futuresHtml;
+        
+        // 渲染现货
+        const spotHtml = spotData.map(s => {
+          const colorClass = s.change > 0 ? 'up' : s.change < 0 ? 'down' : 'flat';
+          const changeStr = (s.change >= 0 ? '+' : '') + s.change.toFixed(2);
+          const pctStr = (s.changePct >= 0 ? '+' : '') + s.changePct.toFixed(2) + '%';
+          return `
+            <div class="data-item">
+              <div>
+                <div class="data-name">${s.name}</div>
+                <div class="data-unit">${s.unit}</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="data-price ${colorClass}">${s.price.toFixed(2)}</div>
+                <div class="data-change ${colorClass}">${changeStr} ${pctStr}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        document.getElementById('spotList').innerHTML = spotHtml;
+        
+        // 更新时间
+        if (data.updateTime) {
+          const updateTime = new Date(data.updateTime);
+          document.getElementById('updateTime').textContent = 
+            `${(updateTime.getMonth()+1).toString().padStart(2,'0')}-${updateTime.getDate().toString().padStart(2,'0')} ${updateTime.getHours().toString().padStart(2,'0')}:${updateTime.getMinutes().toString().padStart(2,'0')}`;
+        }
+        
+      } catch (err) {
+        console.error('加载失败:', err);
+        document.getElementById('futuresList').innerHTML = '<div class="empty">数据加载失败</div>';
+      }
+    }
+    
+    function showAbout() {
+      alert('煤化工产业链信息查询工具\n\n面向行业从业者\n提供企业库和产品价格参考\n\n版本 1.0.0');
+    }
+    
+    // 初始化
+    checkLogin();
+  </script>
+</body>
+</html>
