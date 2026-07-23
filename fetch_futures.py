@@ -3,7 +3,10 @@
 import requests
 import json
 import re
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+# 北京时间
+BJT = timezone(timedelta(hours=8))
 
 # 期货品种配置
 SYMBOLS = [
@@ -91,7 +94,7 @@ def main():
             })
         
         data = {
-            'updateTime': datetime.now().isoformat(),
+            'updateTime': datetime.now(BJT).isoformat(),
             'futures': futures,
             'spots': spots
         }
